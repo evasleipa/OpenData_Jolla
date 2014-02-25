@@ -30,44 +30,89 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import QtQuick.XmlListModel 2.0
 
 
-Page {
-    id: page
 
-    // To enable PullDownMenu, place our content in a SilicaFlickable
-    SilicaFlickable {
-        anchors.fill: parent
 
-        // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
-        PullDownMenu {
-            MenuItem {
-                text: "Show Page 2"
-                onClicked: pageStack.push(Qt.resolvedUrl("SecondPage.qml"))
-            }
+Page
+{
+    id: firstPage
+    XmlListModel {
+        id: forecast
+        source: "http://api.openweathermap.org/data/2.5/forecast/daily?q=Lappeenranta,fi&units=metric&mode=xml"
+        query: "/weatherdata/forecast/time"
+
+        XmlRole {
+            name: "day"
+            query: "@day/string()"
+        }
+        XmlRole {
+            name: "temperature"
+            query: "temperature/@day/string()"
+        }
+        XmlRole {
+            name: "symbol"
+            query: "symbol/@var/string()"
         }
 
-        // Tell SilicaFlickable the height of its content.
-        contentHeight: column.height
 
-        // Place our content in a Column.  The PageHeader is always placed at the top
-        // of the page, followed by our content.
-        Column {
-            id: column
 
-            width: page.width
-            spacing: Theme.paddingLarge
-            PageHeader {
-                title: "UI Template"
-            }
-            Label {
-                x: Theme.paddingLarge
-                text: "Hello Sailors"
-                color: Theme.secondaryHighlightColor
-                font.pixelSize: Theme.fontSizeExtraLarge
+        onStatusChanged: {
+            if (status === XmlListModel.Ready) {
+                var today = get(0)
+                    coverImage.source = "http://openweathermap.org/img/w/" + today.symbol + ".png"
             }
         }
     }
+
+
+
+
+    SilicaListView {
+        anchors.fill: parent
+        spacing: Theme.paddingLarge
+
+        model: forecast
+
+        delegate: ListItem {
+            Row {
+                Image {
+                    height: Theme.itemSizeLarge
+                    width: Theme.itemSizeLarge
+                    source: "http://openweathermap.org/img/w/" + model.symbol + ".png"
+                }
+                Column {
+                    Label {
+                        text: model.day
+                    }
+                    Label {
+                        text: model.temperature
+                    }
+
+
+                }
+            }
+        }
+
+    }
+
+
+    cover: CoverBackground {
+        Column {
+            anchors.centerIn: parent
+            Image {
+                id: coverImage
+                height: Theme.itemSizeLarge
+                width: Theme.itemSizeLarge
+            }
+
+        }
+    }
+
+
+
+
 }
 
 

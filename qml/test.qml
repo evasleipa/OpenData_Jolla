@@ -41,7 +41,7 @@ ApplicationWindow {
     id: mainWindow
 
 
-    initialPage: Qt.resolvedUrl("pages/FirstPage.qml")
+    initialPage: Qt.resolvedUrl("pages/SearchPage.qml")
     cover: Qt.resolvedUrl("pages/Cover.qml")
 
 

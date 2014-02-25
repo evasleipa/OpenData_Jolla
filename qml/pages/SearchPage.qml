@@ -36,7 +36,10 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 Page {
+
+
     id: searchPage
+
     property string searchString
     property bool keepSearchFieldFocus
     property string activeView: "list"
@@ -47,6 +50,7 @@ Page {
     Loader {
         anchors.fill: parent
         sourceComponent: activeView == "list" ? listViewComponent : gridViewComponent
+
     }
 
     Column {
@@ -146,12 +150,16 @@ Page {
             model: listModel
             anchors.fill: parent
             currentIndex: -1 // otherwise currentItem will steal focus
+
             header:  Item {
                 id: header
                 width: headerContainer.width
                 height: headerContainer.height
                 Component.onCompleted: headerContainer.parent = header
+
+
             }
+
 
             PullDownMenu {
                 MenuItem {
@@ -161,6 +169,8 @@ Page {
                         activeView = "grid"
                     }
                 }
+
+
             }
 
             delegate: BackgroundItem {
@@ -181,6 +191,14 @@ Page {
                     textFormat: Text.StyledText
                     text: Theme.highlightText(model.text, searchString, Theme.highlightColor)
                 }
+                MouseArea{
+                        anchors.fill: parent
+                        onClicked:  {
+                            pageStack.pushAttached(Qt.resolvedUrl("FirstPage.qml"), {param: model.text});
+                            pageStack.navigateForward(PageStackAction.Animate);
+
+                        }
+                    }
             }
 
             VerticalScrollDecorator {}

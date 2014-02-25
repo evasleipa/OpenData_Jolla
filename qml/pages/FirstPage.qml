@@ -39,11 +39,11 @@ import QtGraphicalEffects 1.0
 
 Page
 {
-    property string param: ""
+    property string city: ""
 
     XmlListModel {
         id: forecast
-        source: "http://api.openweathermap.org/data/2.5/forecast/daily?q=" + param +",fi&units=metric&mode=xml"
+        source: "http://api.openweathermap.org/data/2.5/forecast/daily?q=" + city +",fi&units=metric&mode=xml"
         query: "/weatherdata/forecast/time"
 
         XmlRole {
@@ -68,10 +68,14 @@ Page
             }
         }
     }
+    Column {
+        PageHeader {
+            title: city
+        }
 
 
 
-    SilicaGridView {
+        SilicaGridView {
 
                 width: 540;
                 height: 960;
@@ -82,6 +86,7 @@ Page
                 model: forecast
 
                 delegate: ListItem {
+
                     function correctColor(temp)
                     {
                         var temp = parseFloat(temp);
@@ -163,7 +168,11 @@ Page
                     {
                         id: rect
 
-
+                        anchors {
+                                    left: parent.left
+                                    right: parent.right
+                                    margins: Theme.paddingLarge
+                                }
                     radius: 10
 
                     color: "transparent"
@@ -294,7 +303,7 @@ Page
                         }
                 }
             }
-
+    }
 }
 
 

@@ -130,7 +130,16 @@ Page {
                         pixelSize: Theme.fontSizeLarge
                         family: Theme.fontFamilyHeading
                     }
+
                 }
+                MouseArea{
+                        anchors.fill: parent
+                        onClicked:  {
+                            pageStack.pushAttached(Qt.resolvedUrl("FirstPage.qml"), {city: model.text});
+                            pageStack.navigateForward(PageStackAction.Animate);
+
+                        }
+                    }
             }
 
             VerticalScrollDecorator {}
@@ -194,7 +203,7 @@ Page {
                 MouseArea{
                         anchors.fill: parent
                         onClicked:  {
-                            pageStack.pushAttached(Qt.resolvedUrl("FirstPage.qml"), {param: model.text});
+                            pageStack.pushAttached(Qt.resolvedUrl("FirstPage.qml"), {city: model.text});
                             pageStack.navigateForward(PageStackAction.Animate);
 
                         }
@@ -215,9 +224,24 @@ Page {
     ListModel {
         id: listModel
 
-        // copied under creative commons license from Wikipedia
-        // http://en.wikipedia.org/wiki/List_of_sovereign_states
-        property variant cities: ["Helsinki", "Lappeenranta", "Tampere"]
+
+        property variant cities: ["Akaa","Alajärvi","Alavus","Espoo","Forssa",
+            "Haapajärvi","Haapavesi","Hamina","Hanko","Harjavalta","Heinola",
+            "Helsinki","Huittinen","Hyvinkää","Hämeenlinna","Iisalmi","Ikaalinen",
+            "Imatra","Joensuu","Juankoski","Jyväskylä","Jämsä","Järvenpää","Kaarina",
+            "Kajaani","Kalajoki","Kankaanpää","Kannus","Karkkila","Kaskinen",
+            "Kauhajoki","Kauhava","Kauniainen","Kemi","Kemijärvi","Kerava","Keuruu",
+            "Kitee","Kiuruvesi","Kokemäki","Kokkola","Kotka","Kouvola",
+            "Kristiinankaupunki","Kuhmo","Kuopio","Kurikka","Kuusamo","Lahti",
+            "Laitila","Lappeenranta","Lapua","Lieksa","Lohja","Loimaa","Loviisa",
+            "Maarianhamina","Mikkeli","Mänttä-Vilppula","Naantali","Nivala","Nokia",
+            "Nurmes","Närpiö","Orimattila","Orivesi","Oulainen","Oulu","Outokumpu",
+            "Paimio","Parainen","Parkano","Pieksämäki","Pietarsaari","Pori","Porvoo",
+            "Pudasjärvi","Pyhäjärvi","Raahe","Raasepori","Raisio","Rauma","Riihimäki",
+            "Rovaniemi","Saarijärvi","Salo","Sastamala","Savonlinna","Seinäjoki",
+            "Somero","Suonenjoki","Tampere","Tornio","Turku","Ulvila","Uusikaarlepyy",
+            "Uusikaupunki","Vaasa","Valkeakoski","Vantaa","Varkaus","Viitasaari",
+            "Virrat","Ylivieska","Ylöjärvi","Ähtäri","Äänekoski"]
 
         function update() {
             var filteredCities = cities.filter(function (city) { return city.toLowerCase().indexOf(searchString) !== -1 })

@@ -33,6 +33,7 @@ import Sailfish.Silica 1.0
 import QtQuick.XmlListModel 2.0
 
 
+<<<<<<< Updated upstream
 ApplicationWindow
 {
     XmlListModel {
@@ -62,6 +63,54 @@ ApplicationWindow
                     }
                 }
     }
+=======
+ApplicationWindow {
+    id: mainWindow
+
+
+
+
+    initialPage: Qt.resolvedUrl("pages/SearchPage.qml")
+//    cover: Qt.resolvedUrl("pages/Cover.qml")
+    cover: CoverBackground {
+
+            Column {
+                anchors.centerIn: parent
+                Image {
+                    id: coverImage
+                    height: Theme.itemSizeLarge
+                    width: Theme.itemSizeLarge
+
+                }
+
+            }
+
+
+
+            CoverActionList {
+                    id: coverAction
+                    signal doge()
+
+                    CoverAction {
+                        iconSource: "image://theme/icon-cover-next"
+                        onTriggered:{
+                            console.log("RASSE PRKL!")
+                            coverAction.doge.connect(FirstPage.forecast.changeDay)
+                            coverAction.doge()
+
+
+
+                        }
+
+
+                    }
+
+                    CoverAction {
+                        iconSource: "image://theme/icon-cover-pause"
+                    }
+                }
+        }
+>>>>>>> Stashed changes
 
     initialPage: Page {
 

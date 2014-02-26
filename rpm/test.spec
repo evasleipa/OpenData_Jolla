@@ -22,6 +22,10 @@ Source0:    %{name}-%{version}.tar.bz2
 Source100:  test.yaml
 Requires:   qt5-qtdeclarative-import-xmllistmodel
 Requires:   sailfishsilica-qt5 >= 0.10.9
+<<<<<<< Updated upstream
+=======
+Requires:   qt5-qtgraphicaleffects
+>>>>>>> Stashed changes
 BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  pkgconfig(Qt5Qml)
 BuildRequires:  pkgconfig(Qt5Core)

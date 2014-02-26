@@ -132,6 +132,8 @@ Page {
                     }
 
                 }
+
+
                 MouseArea{
                         anchors.fill: parent
                         onClicked:  {

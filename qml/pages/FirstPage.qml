@@ -41,6 +41,7 @@ Page
 {
     id: page
     property string city: ""
+
     allowedOrientations: Orientation.Portrait | Orientation.Landscape
     XmlListModel {
             id: forecast
@@ -77,10 +78,51 @@ Page
         onStatusChanged: {
             if (status === XmlListModel.Ready) {
                 var today = get(0)
+                var next_day = get(1)
                 coverImage.source = "http://openweathermap.org/img/w/" + today.symbol + ".png"
+                mainWindow.first = coverImage.source;
+
+               // Lets parse
+                function dateParse(date){
+
+                    var buffer_a = date.split("-");
+                    var buffer_s = buffer_a[2] + "." + buffer_a[1] + "." + buffer_a[0];
+                    return buffer_s
+
+                }
+
+                mainWindow.today_text = dateParse(today.day);
+                mainWindow.tomorrow_text = dateParse(next_day.day);
+
+                //Set default
+                cover_cont.text = mainWindow.today_text;
+
+                mainWindow.temp_today = "°C " + today.temperature;
+                mainWindow.temp_next = "°C " + next_day.temperature;
+
+                cover_cont_temp.text = "°C " + today.temperature;
+
+                cover_cont_city.text = city;
+
+                mainWindow.second = "http://openweathermap.org/img/w/" + next_day.symbol + ".png"
             }
         }
     }
+
+
+   function changeCoverN()
+   {
+       coverImage.source = mainWindow.second;
+       cover_cont.text = mainWindow.tomorrow_text;
+       cover_cont_temp.text = mainWindow.temp_next;
+   }
+   function changeCoverP()
+   {
+       coverImage.source = mainWindow.first;
+       cover_cont.text = mainWindow.today_text;
+       cover_cont_temp.text = mainWindow.temp_today;
+   }
+
 
 
     Drawer {

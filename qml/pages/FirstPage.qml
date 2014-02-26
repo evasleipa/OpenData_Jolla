@@ -353,7 +353,7 @@ Page
                         return retVal;
                     }
                             Image {
-
+                            y: -100
                             id: img_cont;
                             height: Theme.itemSizeLarge*3
                             width: Theme.itemSizeLarge*3

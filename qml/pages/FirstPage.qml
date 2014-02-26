@@ -44,7 +44,7 @@ Page
     allowedOrientations: Orientation.Portrait | Orientation.Landscape
     XmlListModel {
             id: forecast
-            source: "http://api.openweathermap.org/data/2.5/forecast/daily?q=" + param +",fi&units=metric&mode=xml"
+            source: "http://api.openweathermap.org/data/2.5/forecast/daily?q=" + city +",fi&units=metric&mode=xml&cnt=6"
             query: "/weatherdata/forecast/time"
 
             XmlRole {
@@ -107,22 +107,16 @@ Page
                         cellWidth:180
                         model: forecast
 
-
-
-
                         delegate: ListItem {
-
-
-
 
                             Rectangle
                             {
                                 id: rect
 
                                 anchors {
-                                            left: parent.left
-                                            right: parent.right
-                                            margins: Theme.paddingLarge
+                                    left: parent.left
+                                    right: parent.right
+                                    margins: Theme.paddingLarge
                                         }
                             radius: 10
 
@@ -139,8 +133,6 @@ Page
                                 }
 
                                 Column {
-
-
 
                                     Label {
                                         function checkDayName(name,symbol,temp,wind_d,wind_name,wind_mps)
@@ -234,18 +226,8 @@ Page
 
 
                                             }
-
-
-
-
-
                                             retVal += day_name + " " + array_a[2] + "." + array_a[1] + "." + array_a[0];
-
-
-
-
                                             return retVal;
-
 
                                         }
                                         font.pixelSize: 20
@@ -299,6 +281,11 @@ Page
                 enabled: !drawer.opened
 
                 PageHeader { title: city }
+                Button {
+                    text: "Show forecast"
+                    onClicked: drawer.open = true
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
                 Rectangle {
 
                     id: cont;
@@ -315,10 +302,6 @@ Page
                         else if(temp < -30){temp = -30;}
 
                         var hue = 30 + 240 * (30 - temp) / 60;
-
-
-
-
 
 
                         function hsvToRgb(h, s, v){
@@ -342,8 +325,6 @@ Page
                             return [r * 255, g * 255, b * 255];
                         }
 
-
-
                         var rgb_array = hsvToRgb((hue/360),1.0, 1.0);
                         var r_a = rgb_array[0];
                         var g_a = rgb_array[1];
@@ -354,12 +335,7 @@ Page
                         b_a = Math.floor(b_a);
 
 
-
-
                         var retVal = "#";
-
-
-
 
                         function rgbConverter(val, string)
                         {
@@ -371,12 +347,8 @@ Page
 
 
                         retVal = rgbConverter(r_a, retVal);
-
                         retVal = rgbConverter(g_a, retVal);
-
                         retVal = rgbConverter(b_a, retVal);
-
-
 
                         return retVal;
                     }
@@ -421,15 +393,9 @@ Page
                                     source:cont
                                 }
 
-
-
                     }
 
-                Button {
-                    text: "Show forecast"
-                    onClicked: drawer.open = true
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
+
 
 
             }

@@ -39,25 +39,38 @@ import QtGraphicalEffects 1.0
 
 Page
 {
+    id: page
     property string city: ""
-
+    allowedOrientations: Orientation.Portrait | Orientation.Landscape
     XmlListModel {
-        id: forecast
-        source: "http://api.openweathermap.org/data/2.5/forecast/daily?q=" + city +",fi&units=metric&mode=xml"
-        query: "/weatherdata/forecast/time"
+            id: forecast
+            source: "http://api.openweathermap.org/data/2.5/forecast/daily?q=" + param +",fi&units=metric&mode=xml"
+            query: "/weatherdata/forecast/time"
 
-        XmlRole {
-            name: "day"
-            query: "@day/string()"
-        }
-        XmlRole {
-            name: "temperature"
-            query: "temperature/@day/string()"
-        }
-        XmlRole {
-            name: "symbol"
-            query: "symbol/@var/string()"
-        }
+            XmlRole {
+                name: "day"
+                query: "@day/string()"
+            }
+            XmlRole {
+                name: "temperature"
+                query: "temperature/@day/string()"
+            }
+            XmlRole {
+                name: "symbol"
+                query: "symbol/@var/string()"
+            }
+            XmlRole {
+                name: "windDirection"
+                query: "windDirection/@name/string()"
+            }
+            XmlRole {
+                name: "windSpeed_name"
+                query: "windSpeed/@name/string()"
+            }
+            XmlRole {
+                name: "windSpeed_mps"
+                query: "windSpeed/@mps/string()"
+            }
 
 
 
@@ -68,25 +81,230 @@ Page
             }
         }
     }
-    Column {
-        PageHeader {
-            title: city
+
+
+    Drawer {
+        id: drawer
+
+        anchors.fill: parent
+        dock: page.isPortrait ? Dock.Top : Dock.Left
+
+        background: SilicaListView {
+            anchors.fill: parent
+            model: 5
+
+            VerticalScrollDecorator {}
+            Column {
+                PageHeader { title: "Forecast" }
+
+                SilicaGridView {
+                        id: forecastView
+                        width: 540;
+                        height: 960;
+
+
+                        cellHeight: 140
+                        cellWidth:180
+                        model: forecast
+
+
+
+
+                        delegate: ListItem {
+
+
+
+
+                            Rectangle
+                            {
+                                id: rect
+
+                                anchors {
+                                            left: parent.left
+                                            right: parent.right
+                                            margins: Theme.paddingLarge
+                                        }
+                            radius: 10
+
+                            color: "transparent"
+                            width: 170
+                            height: 100
+
+
+                                Image {
+                                    id: img;
+                                    height: Theme.itemSizeLarge
+                                    width: Theme.itemSizeLarge
+                                    source: "http://openweathermap.org/img/w/" + model.symbol + ".png"
+                                }
+
+                                Column {
+
+
+
+                                    Label {
+                                        function checkDayName(name,symbol,temp,wind_d,wind_name,wind_mps)
+                                        {
+
+                                            var array_a = name.split("-");
+                                            var retVal = "";
+                                            var month = "";
+                                            switch(array_a[1])
+                                            {
+                                            case "01":
+                                                month = "January";
+                                                break;
+                                            case "02":
+                                                month = "February";
+                                                break;
+                                            case "03":
+                                                month = "March";
+                                                break;
+                                            case "04":
+                                                month = "April";
+                                                break;
+                                            case "05":
+                                                month = "May";
+                                                break;
+                                            case "06":
+                                                month = "June";
+                                                break;
+                                            case "07":
+                                                month = "July";
+                                                break;
+                                            case "08":
+                                                month = "August";
+                                                break;
+                                            case "09":
+                                                month = "September";
+                                                break;
+                                            case "10":
+                                                month = "October";
+                                                break;
+                                            case "11":
+                                                month = "November";
+                                                break;
+                                            case "12":
+                                                month = "December";
+                                                break;
+                                            default:
+                                                break;
+                                            }
+
+                                            var d = new Date(month + " "+array_a[2]+", "+array_a[0]);
+                                            var day = d.getDay();
+
+                                            var day_name = "";
+                                            switch(day)
+                                            {
+                                            case 0:
+                                                day_name = "Sun";
+                                                break;
+                                            case 1:
+                                                day_name = "Mon";
+                                                break;
+                                            case 2:
+                                                day_name = "Tue";
+                                                break;
+                                            case 3:
+                                                day_name = "Wed";
+                                                break;
+                                            case 4:
+                                                day_name = "Thu";
+                                                break;
+                                            case 5:
+                                                day_name = "Fri"
+                                                break;
+                                            case 6:
+                                                day_name = "Sat"
+                                                break;
+                                            default:
+                                                break;
+                                            }
+
+                                            var d_2 = new Date();
+
+                                            if(d_2.getDate() == d.getDate())
+                                            {
+                                                img_cont.source = "http://openweathermap.org/img/w/" + symbol + ".png"
+                                                text_cont.text = d.getDate() + "." + array_a[1] + "." + array_a[0] + "\n°C "+ temp;
+                                                text_smaller_cont.text = "Wind: "+wind_name;
+                                                text_smaller_cont_2.text = wind_mps + "m/s " + wind_d;
+                                                glow_big.color = cont.correctColor(temp);
+
+
+                                            }
+
+
+
+
+
+                                            retVal += day_name + " " + array_a[2] + "." + array_a[1] + "." + array_a[0];
+
+
+
+
+                                            return retVal;
+
+
+                                        }
+                                        font.pixelSize: 20
+                                        text:  checkDayName(model.day,model.symbol,model.temperature,model.windDirection,model.windSpeed_name,model.windSpeed_mps)
+                                        height: 80
+                                    }
+                                    Label {
+
+
+
+                                        text: "°C " + model.temperature
+
+                                    }
+                               }
+                            }
+                            Glow {
+                                    anchors.fill: rect
+                                    radius: 16
+                                    samples: 16
+                                    color: cont.correctColor(model.temperature);
+                                    source:rect
+                                }
+                        }
+                    }
+            }
         }
 
+        SilicaFlickable {
+            anchors {
+                fill: parent
+                leftMargin: page.isPortrait ? 0 : controlPanel.visibleSize
+                topMargin: page.isPortrait ? controlPanel.visibleSize : 0
+                rightMargin: page.isPortrait ? 0 : progressPanel.visibleSize
+                bottomMargin: page.isPortrait ? progressPanel.visibleSize : 0
+            }
 
+            contentHeight: column.height + Theme.paddingLarge
 
-        SilicaGridView {
+            VerticalScrollDecorator {}
 
-                width: 540;
-                height: 960;
+            MouseArea {
+                enabled: drawer.open
+                anchors.fill: column
+                onClicked: drawer.open = false
+            }
 
+            Column {
+                id: column
+                spacing: Theme.paddingLarge
+                width: parent.width
+                enabled: !drawer.opened
 
-                cellHeight: 140
-                cellWidth:180
-                model: forecast
+                PageHeader { title: city }
+                Rectangle {
 
-                delegate: ListItem {
-
+                    id: cont;
+                    color: "transparent";
+                    width: 540;
+                    height: 240;
                     function correctColor(temp)
                     {
                         var temp = parseFloat(temp);
@@ -162,148 +380,65 @@ Page
 
                         return retVal;
                     }
+                            Image {
 
-
-                    Rectangle
-                    {
-                        id: rect
-
-                        anchors {
-                                    left: parent.left
-                                    right: parent.right
-                                    margins: Theme.paddingLarge
-                                }
-                    radius: 10
-
-                    color: "transparent"
-                    width: 170
-                    height: 100
-
-
-                        Image {
-                            id: img;
-                            height: Theme.itemSizeLarge
-                            width: Theme.itemSizeLarge
-                            source: "http://openweathermap.org/img/w/" + model.symbol + ".png"
-                        }
-
-                        Column {
-
-
-
+                            id: img_cont;
+                            height: Theme.itemSizeLarge*3
+                            width: Theme.itemSizeLarge*3
+                            source: ""
+                            }
                             Label {
-                                function checkDayName(name)
-                                {
+                                anchors.left: img_cont.right;
 
-                                    var array_a = name.split("-");
+    //                                    y: 90;
+                                id: text_cont;
+                                text: ""
 
-                                    var month = "";
-                                    switch(array_a[1])
-                                    {
-                                    case "01":
-                                        month = "January";
-                                        break;
-                                    case "02":
-                                        month = "February";
-                                        break;
-                                    case "03":
-                                        month = "March";
-                                        break;
-                                    case "04":
-                                        month = "April";
-                                        break;
-                                    case "05":
-                                        month = "May";
-                                        break;
-                                    case "06":
-                                        month = "June";
-                                        break;
-                                    case "07":
-                                        month = "July";
-                                        break;
-                                    case "08":
-                                        month = "August";
-                                        break;
-                                    case "09":
-                                        month = "September";
-                                        break;
-                                    case "10":
-                                        month = "October";
-                                        break;
-                                    case "11":
-                                        month = "November";
-                                        break;
-                                    case "12":
-                                        month = "December";
-                                        break;
-                                    default:
-                                        break;
-                                    }
+                            }
+                            Label {
+                                anchors.left: img_cont.right;
 
-                                    var d = new Date(month + " "+array_a[2]+", "+array_a[0]);
-                                    var day = d.getDay();
-
-                                    var day_name = "";
-                                    switch(day)
-                                    {
-                                    case 0:
-                                        day_name = "Sun";
-                                        break;
-                                    case 1:
-                                        day_name = "Mon";
-                                        break;
-                                    case 2:
-                                        day_name = "Tue";
-                                        break;
-                                    case 3:
-                                        day_name = "Wed";
-                                        break;
-                                    case 4:
-                                        day_name = "Thu";
-                                        break;
-                                    case 5:
-                                        day_name = "Fri"
-                                        break;
-                                    case 6:
-                                        day_name = "Sat"
-                                        break;
-                                    default:
-                                        break;
-                                    }
-
-
-
-                                     var retVal = "";
-                                     retVal += day_name + " " + array_a[2] + " " + array_a[1] + " " + array_a[0];
-
-
-
-
-                                    return retVal;
-
-
-                                }
+                                anchors.top: text_cont.bottom;
                                 font.pixelSize: 20
-                                text:  checkDayName(model.day)
-                                height: 80
+                                id: text_smaller_cont;
+                                text: ""
                             }
                             Label {
+                                anchors.left: img_cont.right;
 
-                                text: "°C " +model.temperature
-
+                                anchors.top: text_smaller_cont.bottom;
+                                font.pixelSize: 20
+                                id: text_smaller_cont_2;
+                                text: ""
                             }
-                       }
+
+                            Glow {
+                                    id: glow_big
+                                    anchors.fill: cont
+                                    radius: 16
+                                    samples: 16
+                                    color: cont.correctColor(model.temperature);
+                                    source:cont
+                                }
+
+
+
                     }
-                    Glow {
-                            anchors.fill: rect
-                            radius: 16
-                            samples: 16
-                            color: correctColor(model.temperature);
-                            source:rect
-                        }
+
+                Button {
+                    text: "Show forecast"
+                    onClicked: drawer.open = true
+                    anchors.horizontalCenter: parent.horizontalCenter
                 }
+
+
             }
+
+
+        }
     }
+
+
 }
 
 

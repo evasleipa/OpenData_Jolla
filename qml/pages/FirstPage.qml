@@ -39,7 +39,11 @@ import QtGraphicalEffects 1.0
 
 Page
 {
+    //http://wms.fmi.fi/fmi-apikey/39d7e8a7-d2dc-4120-b9ba-1bb4f0480ce0/geoserver/Weather/wms?service=WMS&version=1.3.0&request=GetMap&layers=Weather:precipitation-day&styles=&bbox=59.7,19.1,70.1,31.7&width=300&height=500&crs=EPSG:4326&format=image/png
+    //http://wms.fmi.fi/fmi-apikey/39d7e8a7-d2dc-4120-b9ba-1bb4f0480ce0/geoserver/Weather/wms?service=WMS&version=1.3.0&request=GetMap&layers=Weather:temperature-day&styles=&bbox=59.7,19.1,70.1,31.7&width=300&height=500&crs=EPSG:4326&format=image/png
     id: page
+
+
     property string city: ""
     allowedOrientations: Orientation.Portrait
     XmlListModel {
@@ -431,6 +435,26 @@ Page
                                     source:cont
                                 }
 
+                    }
+                    // Maps of temp and rain in Finland
+                    Row {
+
+                        Image {
+                            id: temp_map
+
+                            source: "http://wms.fmi.fi/fmi-apikey/39d7e8a7-d2dc-4120-b9ba-1bb4f0480ce0/geoserver/Weather/wms?service=WMS&version=1.3.0&request=GetMap&layers=Weather:temperature-day&styles=&bbox=59.7,19.1,70.1,31.7&width=215&height=400&crs=EPSG:4326&format=image/png"
+                            sourceSize.width: 215
+                            sourceSize.height: 400
+                            horizontalAlignment: Page.AlignHCenter;
+                        }
+                        Image {
+                            id: temp_prec
+
+                            source: "http://wms.fmi.fi/fmi-apikey/39d7e8a7-d2dc-4120-b9ba-1bb4f0480ce0/geoserver/Weather/wms?service=WMS&version=1.3.0&request=GetMap&layers=Weather:precipitation-day&styles=&bbox=59.7,19.1,70.1,31.7&width=215&height=400&crs=EPSG:4326&format=image/png"
+                            sourceSize.width: 215
+                            sourceSize.height: 400
+                            horizontalAlignment: Page.AlignHCenter;
+                        }
                     }
 
 

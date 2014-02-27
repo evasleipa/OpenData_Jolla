@@ -40,9 +40,67 @@ import "pages"
 ApplicationWindow {
     id: mainWindow
 
+    property string city_name: "";
+
+    property string first: "";
+    property string second: "";
+    property string today_text: "";
+    property string tomorrow_text: "";
+    property string temp_today: "";
+    property string temp_next: "";
+
 
     initialPage: Qt.resolvedUrl("pages/SearchPage.qml")
-    cover: Qt.resolvedUrl("pages/Cover.qml")
+    cover: CoverBackground {
+        Column {
+            anchors.centerIn: parent
+            Label{
+                id: cover_cont_city
+                text: ""
+            }
+            Label{
+                id: cover_cont
+                text: ""
+            }
+            Label{
+                id: cover_cont_temp
+                text: ""
+            }
 
+            Image {
+                id: coverImage
+                height: Theme.itemSizeLarge
+                width: Theme.itemSizeLarge
+            }
 
+        }
+        Loader
+       {
+       id: myLoader
+       source: "pages/FirstPage.qml"
+       }
+        CoverActionList {
+                id: coverAction
+
+                CoverAction {
+                    iconSource: "image://theme/icon-cover-previous"
+                    onTriggered: {
+                        Connections
+                       {
+                            target: myLoader.item.changeCoverP();
+                       }
+                    }
+                }
+
+                CoverAction {
+                    iconSource: "image://theme/icon-cover-next"
+                    onTriggered: {
+                        Connections
+                       {
+                            target: myLoader.item.changeCoverN();
+                       }
+                    }
+                }
+            }
+    }
 }

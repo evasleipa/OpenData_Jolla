@@ -46,6 +46,15 @@ Page
 
     property string city: ""
     allowedOrientations: Orientation.Portrait
+
+    // Busy indicator while loading data from openweathermap.org
+    BusyIndicator {
+        id: busyind
+        anchors.centerIn: parent
+        running: true
+    }
+
+
     XmlListModel {
             id: forecast
             source: "http://api.openweathermap.org/data/2.5/forecast/daily?q=" + city +",fi&units=metric&mode=xml&cnt=6"
@@ -80,6 +89,7 @@ Page
 
             onStatusChanged: {
                 if (status === XmlListModel.Ready) {
+                    busyind.running = false
                     var today = get(0)
                     var next_day = get(1)
                     coverImage.source = "http://openweathermap.org/img/w/" + today.symbol + ".png"
@@ -109,8 +119,11 @@ Page
 
                     mainWindow.second = "http://openweathermap.org/img/w/" + next_day.symbol + ".png"
                 }
+
             }
     }
+
+
 
     function changeCoverN()
        {

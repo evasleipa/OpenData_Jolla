@@ -138,163 +138,30 @@ Page
 
             VerticalScrollDecorator {}
             Column {
-                PageHeader { title: "Forecast" }
+                // Maps of temp and rain in Finland
 
-                SilicaGridView {
-                        id: forecastView
-                        width: 540;
-                        height: 960;
+                Row {
 
 
-                        cellHeight: 140
-                        cellWidth:180
-                        model: forecast
+                    Image {
+                        id: temp_map
 
-                        delegate: ListItem {
-
-                            Rectangle
-                            {
-                                id: rect
-
-                                anchors {
-                                    left: parent.left
-                                    right: parent.right
-                                    margins: Theme.paddingLarge
-                                        }
-                            radius: 10
-
-                            color: "transparent"
-                            width: 170
-                            height: 100
-
-
-                                Image {
-                                    id: img;
-                                    height: Theme.itemSizeLarge
-                                    width: Theme.itemSizeLarge
-                                    source: "http://openweathermap.org/img/w/" + model.symbol + ".png"
-                                }
-
-                                Column {
-
-                                    Label {
-                                        function checkDayName(name,symbol,temp,wind_d,wind_name,wind_mps)
-                                        {
-
-                                            var array_a = name.split("-");
-                                            var retVal = "";
-                                            var month = "";
-                                            switch(array_a[1])
-                                            {
-                                            case "01":
-                                                month = "January";
-                                                break;
-                                            case "02":
-                                                month = "February";
-                                                break;
-                                            case "03":
-                                                month = "March";
-                                                break;
-                                            case "04":
-                                                month = "April";
-                                                break;
-                                            case "05":
-                                                month = "May";
-                                                break;
-                                            case "06":
-                                                month = "June";
-                                                break;
-                                            case "07":
-                                                month = "July";
-                                                break;
-                                            case "08":
-                                                month = "August";
-                                                break;
-                                            case "09":
-                                                month = "September";
-                                                break;
-                                            case "10":
-                                                month = "October";
-                                                break;
-                                            case "11":
-                                                month = "November";
-                                                break;
-                                            case "12":
-                                                month = "December";
-                                                break;
-                                            default:
-                                                break;
-                                            }
-
-                                            var d = new Date(month + " "+array_a[2]+", "+array_a[0]);
-                                            var day = d.getDay();
-
-                                            var day_name = "";
-                                            switch(day)
-                                            {
-                                            case 0:
-                                                day_name = "Sun";
-                                                break;
-                                            case 1:
-                                                day_name = "Mon";
-                                                break;
-                                            case 2:
-                                                day_name = "Tue";
-                                                break;
-                                            case 3:
-                                                day_name = "Wed";
-                                                break;
-                                            case 4:
-                                                day_name = "Thu";
-                                                break;
-                                            case 5:
-                                                day_name = "Fri"
-                                                break;
-                                            case 6:
-                                                day_name = "Sat"
-                                                break;
-                                            default:
-                                                break;
-                                            }
-
-                                            var d_2 = new Date();
-
-                                            if(d_2.getDate() == d.getDate())
-                                            {
-                                                img_cont.source = "http://openweathermap.org/img/w/" + symbol + ".png"
-                                                text_cont.text = d.getDate() + "." + array_a[1] + "." + array_a[0] + "\n°C "+ temp;
-                                                text_smaller_cont.text = "Wind: "+wind_name;
-                                                text_smaller_cont_2.text = wind_mps + "m/s " + wind_d;
-                                                glow_big.color = cont.correctColor(temp);
-
-
-                                            }
-                                            retVal += day_name + " " + array_a[2] + "." + array_a[1] + "." + array_a[0];
-                                            return retVal;
-
-                                        }
-                                        font.pixelSize: 20
-                                        text:  checkDayName(model.day,model.symbol,model.temperature,model.windDirection,model.windSpeed_name,model.windSpeed_mps)
-                                        height: 80
-                                    }
-                                    Label {
-
-
-
-                                        text: "°C " + model.temperature
-
-                                    }
-                               }
-                            }
-                            Glow {
-                                    anchors.fill: rect
-                                    radius: 16
-                                    samples: 16
-                                    color: cont.correctColor(model.temperature);
-                                    source:rect
-                                }
-                        }
+                        source: "http://wms.fmi.fi/fmi-apikey/39d7e8a7-d2dc-4120-b9ba-1bb4f0480ce0/geoserver/Weather/wms?service=WMS&version=1.3.0&request=GetMap&layers=Weather:temperature-day&styles=&bbox=59.7,19.1,70.1,31.7&width=215&height=400&crs=EPSG:4326&format=image/png"
+                        sourceSize.width: 215
+                        sourceSize.height: 400
+                        horizontalAlignment: Page.AlignHCenter;
                     }
+                    Image {
+                        id: temp_prec
+
+                        source: "http://wms.fmi.fi/fmi-apikey/39d7e8a7-d2dc-4120-b9ba-1bb4f0480ce0/geoserver/Weather/wms?service=WMS&version=1.3.0&request=GetMap&layers=Weather:precipitation-day&styles=&bbox=59.7,19.1,70.1,31.7&width=215&height=400&crs=EPSG:4326&format=image/png"
+                        sourceSize.width: 215
+                        sourceSize.height: 400
+                        horizontalAlignment: Page.AlignHCenter;
+                    }
+                }
+
+
             }
         }
 
@@ -325,7 +192,7 @@ Page
 
                 PageHeader { title: city }
                 Button {
-                    text: "Show forecast"
+                    text: "Show temp & rain map"
                     onClicked: drawer.open = true
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
@@ -436,27 +303,164 @@ Page
                                 }
 
                     }
-                    // Maps of temp and rain in Finland
-                    Row {
-
-                        Image {
-                            id: temp_map
-
-                            source: "http://wms.fmi.fi/fmi-apikey/39d7e8a7-d2dc-4120-b9ba-1bb4f0480ce0/geoserver/Weather/wms?service=WMS&version=1.3.0&request=GetMap&layers=Weather:temperature-day&styles=&bbox=59.7,19.1,70.1,31.7&width=215&height=400&crs=EPSG:4326&format=image/png"
-                            sourceSize.width: 215
-                            sourceSize.height: 400
-                            horizontalAlignment: Page.AlignHCenter;
-                        }
-                        Image {
-                            id: temp_prec
-
-                            source: "http://wms.fmi.fi/fmi-apikey/39d7e8a7-d2dc-4120-b9ba-1bb4f0480ce0/geoserver/Weather/wms?service=WMS&version=1.3.0&request=GetMap&layers=Weather:precipitation-day&styles=&bbox=59.7,19.1,70.1,31.7&width=215&height=400&crs=EPSG:4326&format=image/png"
-                            sourceSize.width: 215
-                            sourceSize.height: 400
-                            horizontalAlignment: Page.AlignHCenter;
-                        }
+                Label {
+                    text: "Forecast"
                     }
+                    SilicaGridView {
+                            id: forecastView
+                            width: 540;
+                            height: 960;
 
+
+                            cellHeight: 140
+                            cellWidth:180
+                            model: forecast
+
+                            delegate: ListItem {
+
+                                Rectangle
+                                {
+                                    id: rect
+
+                                    anchors {
+                                        left: parent.left
+                                        right: parent.right
+                                        margins: Theme.paddingLarge
+                                            }
+                                radius: 10
+
+                                color: "transparent"
+                                width: 170
+                                height: 100
+
+
+                                    Image {
+                                        id: img;
+                                        height: Theme.itemSizeLarge
+                                        width: Theme.itemSizeLarge
+                                        source: "http://openweathermap.org/img/w/" + model.symbol + ".png"
+                                    }
+
+                                    Column {
+
+                                        Label {
+                                            function checkDayName(name,symbol,temp,wind_d,wind_name,wind_mps)
+                                            {
+
+                                                var array_a = name.split("-");
+                                                var retVal = "";
+                                                var month = "";
+                                                switch(array_a[1])
+                                                {
+                                                case "01":
+                                                    month = "January";
+                                                    break;
+                                                case "02":
+                                                    month = "February";
+                                                    break;
+                                                case "03":
+                                                    month = "March";
+                                                    break;
+                                                case "04":
+                                                    month = "April";
+                                                    break;
+                                                case "05":
+                                                    month = "May";
+                                                    break;
+                                                case "06":
+                                                    month = "June";
+                                                    break;
+                                                case "07":
+                                                    month = "July";
+                                                    break;
+                                                case "08":
+                                                    month = "August";
+                                                    break;
+                                                case "09":
+                                                    month = "September";
+                                                    break;
+                                                case "10":
+                                                    month = "October";
+                                                    break;
+                                                case "11":
+                                                    month = "November";
+                                                    break;
+                                                case "12":
+                                                    month = "December";
+                                                    break;
+                                                default:
+                                                    break;
+                                                }
+
+                                                var d = new Date(month + " "+array_a[2]+", "+array_a[0]);
+                                                var day = d.getDay();
+
+                                                var day_name = "";
+                                                switch(day)
+                                                {
+                                                case 0:
+                                                    day_name = "Sun";
+                                                    break;
+                                                case 1:
+                                                    day_name = "Mon";
+                                                    break;
+                                                case 2:
+                                                    day_name = "Tue";
+                                                    break;
+                                                case 3:
+                                                    day_name = "Wed";
+                                                    break;
+                                                case 4:
+                                                    day_name = "Thu";
+                                                    break;
+                                                case 5:
+                                                    day_name = "Fri"
+                                                    break;
+                                                case 6:
+                                                    day_name = "Sat"
+                                                    break;
+                                                default:
+                                                    break;
+                                                }
+
+                                                var d_2 = new Date();
+
+                                                if(d_2.getDate() == d.getDate())
+                                                {
+                                                    img_cont.source = "http://openweathermap.org/img/w/" + symbol + ".png"
+                                                    text_cont.text = d.getDate() + "." + array_a[1] + "." + array_a[0] + "\n°C "+ temp;
+                                                    text_smaller_cont.text = "Wind: "+wind_name;
+                                                    text_smaller_cont_2.text = wind_mps + "m/s " + wind_d;
+                                                    glow_big.color = cont.correctColor(temp);
+
+
+                                                }
+                                                retVal += day_name + " " + array_a[2] + "." + array_a[1] + "." + array_a[0];
+                                                return retVal;
+
+                                            }
+                                            font.pixelSize: 20
+                                            text:  checkDayName(model.day,model.symbol,model.temperature,model.windDirection,model.windSpeed_name,model.windSpeed_mps)
+                                            height: 80
+                                        }
+                                        Label {
+
+
+
+                                            text: "°C " + model.temperature
+
+                                        }
+                                   }
+                                }
+                                Glow {
+                                        anchors.fill: rect
+                                        radius: 16
+                                        samples: 16
+                                        color: cont.correctColor(model.temperature);
+                                        source:rect
+                                    }
+                            }
+                        }
 
 
 

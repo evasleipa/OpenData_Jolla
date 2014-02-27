@@ -138,12 +138,27 @@ Page
 
             VerticalScrollDecorator {}
             Column {
-                // Maps of temp and rain in Finland
+                // Maps of average temp and precipitation in Finland
 
-                Row {
+                Grid {
+                    x: 30
+                    spacing: 80
+
+                    Label {
+                        text: "Temperature"
+                    }
+                    Label {
+                        text: "Precipitation"
+                    }
+                }
+
+                Grid {
+                    x: 30
+                    spacing: 30
 
 
                     Image {
+                        y: 50
                         id: temp_map
 
                         source: "http://wms.fmi.fi/fmi-apikey/39d7e8a7-d2dc-4120-b9ba-1bb4f0480ce0/geoserver/Weather/wms?service=WMS&version=1.3.0&request=GetMap&layers=Weather:temperature-day&styles=&bbox=59.7,19.1,70.1,31.7&width=215&height=400&crs=EPSG:4326&format=image/png"
@@ -151,9 +166,11 @@ Page
                         sourceSize.height: 400
                         horizontalAlignment: Page.AlignHCenter;
                     }
+
+
                     Image {
                         id: temp_prec
-
+                        x: +100
                         source: "http://wms.fmi.fi/fmi-apikey/39d7e8a7-d2dc-4120-b9ba-1bb4f0480ce0/geoserver/Weather/wms?service=WMS&version=1.3.0&request=GetMap&layers=Weather:precipitation-day&styles=&bbox=59.7,19.1,70.1,31.7&width=215&height=400&crs=EPSG:4326&format=image/png"
                         sourceSize.width: 215
                         sourceSize.height: 400
@@ -192,7 +209,7 @@ Page
 
                 PageHeader { title: city }
                 Button {
-                    text: "Show temp & rain map"
+                    text: "Show temp & precipitation"
                     onClicked: drawer.open = true
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
